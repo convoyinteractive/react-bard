@@ -82,4 +82,6 @@ const Heading = ({ attrs, content }) => {
 
 const HorizontalRule = () => (<hr />);
 
+const HardBreak = () => (<br />);
+
 export default Bard;
