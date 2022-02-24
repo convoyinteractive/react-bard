@@ -1,6 +1,6 @@
 import React from "react";
 
-const makeTag = (type) => {
+export const makeTag = (type) => {
     const availableTags = {
         blockquote: 'blockquote',
         bullet_list: 'ul',
@@ -24,20 +24,19 @@ const makeTag = (type) => {
     if(Object.keys(availableTags).includes(type)) {
         return availableTags[type];
     }
-    console.error(`react-bard: Type "${type}" not supported`);
-    return null;
+    throw new Error(`react-bard: Type "${type}" not supported`);
 };
 
-const makeKey = () => Math.random().toString(36).substr(2, 8);
+export const makeKey = () => Math.random().toString(36).substr(2, 8);
 
 const Bard = ({ data, sets }) => {
     const components = {
         heading: Heading,
         horizontal_rule: HorizontalRule,
+        hard_break: HardBreak,
         text: Text,
         set: Set,
     }
-
     
     return data.map((item) => {
         const Component = components[item.type] || Utility;
@@ -47,13 +46,13 @@ const Bard = ({ data, sets }) => {
     });
 };
 
-const Text = ({ marks = [], text }) => {
-    let output = text;
+export const Markup = ({ type, attrs, children }) => {
+    const Tag = makeTag(type);
+    return Tag ? (<Tag {...attrs} >{children}</Tag>) : null;
+}
 
-    const Markup = ({ type, attrs, children }) => {
-        const Tag = makeTag(type);
-        return Tag ? (<Tag {...attrs} >{children}</Tag>) : null;
-    }
+export const Text = ({ marks = [], text }) => {
+    let output = text;
 
     marks.forEach(({ type, attrs }) => output = (
         <Markup type={type} attrs={attrs}>{output}</Markup>
@@ -62,26 +61,26 @@ const Text = ({ marks = [], text }) => {
     return output;
 }
 
-const Utility = ({ content = [], type }) => {
+export const Utility = ({ content = [], type }) => {
     const Tag = makeTag(type);
 
     return Tag ? (<Tag><Bard data={content} /></Tag>) : null;
 };
 
-const Set = ({ attrs, sets }) => {
+export const Set = ({ attrs, sets }) => {
     const { values } = attrs; 
     const Component = sets[values.type];
     return <Component {...values} />;
 };
 
-const Heading = ({ attrs, content }) => {
+export const Heading = ({ attrs, content = [] }) => {
     const Tag = "h" + attrs.level;
 
     return (<Tag><Bard data={content} /></Tag>);
 };
 
-const HorizontalRule = () => (<hr />);
+export const HorizontalRule = () => (<hr />);
 
-const HardBreak = () => (<br />);
+export const HardBreak = () => (<br />);
 
 export default Bard;
