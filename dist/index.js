@@ -2,9 +2,25 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 var React = require('react');
 
-function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
+function _interopNamespace(e) {
+    if (e && e.__esModule) return e;
+    var n = Object.create(null);
+    if (e) {
+        Object.keys(e).forEach(function (k) {
+            if (k !== 'default') {
+                var d = Object.getOwnPropertyDescriptor(e, k);
+                Object.defineProperty(n, k, d.get ? d : {
+                    enumerable: true,
+                    get: function () { return e[k]; }
+                });
+            }
+        });
+    }
+    n["default"] = e;
+    return Object.freeze(n);
+}
 
-var React__default = /*#__PURE__*/_interopDefaultLegacy(React);
+var React__namespace = /*#__PURE__*/_interopNamespace(React);
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -32,7 +48,8 @@ var __assign = function() {
     return __assign.apply(this, arguments);
 };
 
-var makeTag = function (type) {
+var Tag = function (_a) {
+    var type = _a.type, children = _a.children;
     var availableTags = {
         blockquote: 'blockquote',
         bullet_list: 'ul',
@@ -53,60 +70,71 @@ var makeTag = function (type) {
         table_header: 'th',
         table_cell: 'td',
     };
-    if (Object.keys(availableTags).includes(type)) {
-        return availableTags[type];
+    if (!Object.keys(availableTags).includes(type)) {
+        throw new Error("react-bard: Type \"".concat(type, "\" not supported"));
     }
-    console.error("react-bard: Type \"".concat(type, "\" not supported"));
-    return null;
+    var HtmlTag = availableTags[type];
+    return (React__namespace.createElement(HtmlTag, null, children));
 };
-var makeKey = function () { return Math.random().toString(36).substr(2, 8); };
-var Bard = function (_a) {
-    var data = _a.data, sets = _a.sets;
-    var components = {
-        heading: Heading,
-        horizontal_rule: HorizontalRule,
-        text: Text,
-        set: Set,
-    };
-    return data.map(function (item) {
-        var Component = components[item.type] || Utility;
-        var key = makeKey();
-        return (React__default["default"].createElement(Component, __assign({}, item, { sets: sets, key: key })));
-    });
+var HardBreak = function () {
+    return (React__namespace.createElement("br", null));
 };
-var Text = function (_a) {
-    var _b = _a.marks, marks = _b === void 0 ? [] : _b, text = _a.text;
-    var output = text;
-    var Markup = function (_a) {
-        var type = _a.type, attrs = _a.attrs, children = _a.children;
-        var Tag = makeTag(type);
-        return Tag ? (React__default["default"].createElement(Tag, __assign({}, attrs), children)) : null;
-    };
-    marks.forEach(function (_a) {
-        var type = _a.type, attrs = _a.attrs;
-        return output = (React__default["default"].createElement(Markup, { type: type, attrs: attrs }, output));
-    });
-    return output;
+var Heading = function (_a) {
+    var attrs = _a.attrs, _b = _a.content, content = _b === void 0 ? [] : _b, sets = _a.sets;
+    var Tag = "h".concat(attrs.level);
+    return (React__namespace.createElement(Tag, null,
+        React__namespace.createElement(Bard, { data: content, sets: sets })));
 };
-var Utility = function (_a) {
-    var _b = _a.content, content = _b === void 0 ? [] : _b, type = _a.type;
-    var Tag = makeTag(type);
-    return Tag ? (React__default["default"].createElement(Tag, null,
-        React__default["default"].createElement(Bard, { data: content }))) : null;
+var HorizontalRule = function () {
+    return (React__namespace.createElement("hr", null));
+};
+var Markup = function (_a) {
+    var type = _a.type, attrs = _a.attrs, children = _a.children;
+    return (React__namespace.createElement(Tag, __assign({ type: type }, attrs), children));
 };
 var Set = function (_a) {
     var attrs = _a.attrs, sets = _a.sets;
     var values = attrs.values;
     var Component = sets[values.type];
-    return React__default["default"].createElement(Component, __assign({}, values));
+    return (React__namespace.createElement(Component, __assign({}, values)));
 };
-var Heading = function (_a) {
-    var attrs = _a.attrs, content = _a.content;
-    var Tag = "h" + attrs.level;
-    return (React__default["default"].createElement(Tag, null,
-        React__default["default"].createElement(Bard, { data: content })));
+var Text = function (_a) {
+    var _b = _a.marks, marks = _b === void 0 ? [] : _b, text = _a.text;
+    var output = text;
+    marks.forEach(function (_a) {
+        var type = _a.type, attrs = _a.attrs;
+        return output = (React__namespace.createElement(Markup, { type: type, attrs: attrs }, output));
+    });
+    return output;
 };
-var HorizontalRule = function () { return (React__default["default"].createElement("hr", null)); };
+var Utility = function (_a) {
+    var _b = _a.content, content = _b === void 0 ? [] : _b, type = _a.type, sets = _a.sets;
+    return (React__namespace.createElement(Tag, { type: type },
+        React__namespace.createElement(Bard, { data: content, sets: sets })));
+};
+var Bard = function (_a) {
+    var data = _a.data, sets = _a.sets;
+    var components = {
+        heading: Heading,
+        horizontal_rule: HorizontalRule,
+        hard_break: HardBreak,
+        text: Text,
+        set: Set,
+    };
+    return data.map(function (item) {
+        var Component = components[item.type] || Utility;
+        var key = Math.random().toString(36).substr(2, 8);
+        return (React__namespace.createElement(Component, __assign({}, item, { sets: sets, key: key })));
+    });
+};
 
+exports.HardBreak = HardBreak;
+exports.Heading = Heading;
+exports.HorizontalRule = HorizontalRule;
+exports.Markup = Markup;
+exports.Set = Set;
+exports.Tag = Tag;
+exports.Text = Text;
+exports.Utility = Utility;
 exports["default"] = Bard;
 //# sourceMappingURL=index.js.map
