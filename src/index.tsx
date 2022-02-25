@@ -1,6 +1,32 @@
-import React from "react";
+import * as React from "react";
 
-export const makeTag = (type) => {
+export interface HasAttributes {
+    attrs?: Object;
+}
+
+export interface HasChildren {
+    children: React.ReactNode;
+}
+
+export interface HasContent {
+    content?: Array<HasType>;
+}
+
+export interface HasSets {
+    sets: {
+        [key: string]: Function;
+    };
+}
+
+export interface HasType {
+    type: string;
+}
+
+type HeadingAttributes = { attrs: { level: 1 | 2 | 3 | 4 | 5 | 6 } };
+
+type SetAttributes = { attrs: { values: HasType } };
+
+export const Tag = ({type, children}:HasType & HasChildren) => {
     const availableTags = {
         blockquote: 'blockquote',
         bullet_list: 'ul',
@@ -21,15 +47,52 @@ export const makeTag = (type) => {
         table_header: 'th',
         table_cell: 'td',
     };
-    if(Object.keys(availableTags).includes(type)) {
-        return availableTags[type];
+    if(!Object.keys(availableTags).includes(type)) {
+        throw new Error(`react-bard: Type "${type}" not supported`);
     }
-    throw new Error(`react-bard: Type "${type}" not supported`);
+    const HtmlTag = availableTags[type] as keyof JSX.IntrinsicElements;
+    return (<HtmlTag>{ children }</HtmlTag>)
 };
 
-export const makeKey = () => Math.random().toString(36).substr(2, 8);
+export const HardBreak = () => {
+    return (<br />)
+};
 
-const Bard = ({ data, sets }) => {
+export const Heading = ({ attrs, content = [], sets }: HasContent & HasSets & HeadingAttributes) => {
+    const Tag = `h${attrs.level}` as keyof JSX.IntrinsicElements;
+
+    return (<Tag><Bard data={content} sets={sets} /></Tag>);
+};
+
+export const HorizontalRule = () => {
+    return (<hr />)
+};
+
+export const Markup = ({ type, attrs, children }: HasType & HasAttributes & HasChildren) => {
+    return (<Tag type={type} {...attrs} >{children}</Tag>) ;
+}
+
+export const Set = ({ attrs, sets }:SetAttributes & HasSets) => {
+    const { values } = attrs; 
+    const Component = sets[values.type];
+    return (<Component {...values} />);
+};
+
+export const Text = ({ marks = [], text }: {marks: Array<HasType & HasAttributes>, text: React.ReactNode}) => {
+    let output = text;
+
+    marks.forEach(({ type, attrs }) => output = (
+        <Markup type={type} attrs={attrs}>{output}</Markup>
+    ));
+
+    return output;
+}
+
+export const Utility = ({ content = [], type, sets }:HasType & HasContent & HasSets) => {
+    return (<Tag type={type}><Bard data={content} sets={sets} /></Tag>);
+};
+
+const Bard = ({ data, sets }: { data: Array<HasType> } & HasSets ) => {
     const components = {
         heading: Heading,
         horizontal_rule: HorizontalRule,
@@ -40,47 +103,10 @@ const Bard = ({ data, sets }) => {
     
     return data.map((item) => {
         const Component = components[item.type] || Utility;
-        const key = makeKey();
+        const key = Math.random().toString(36).substr(2, 8);
 
         return (<Component {...item} sets={ sets } key={key} />);
     });
 };
-
-export const Markup = ({ type, attrs, children }) => {
-    const Tag = makeTag(type);
-    return Tag ? (<Tag {...attrs} >{children}</Tag>) : null;
-}
-
-export const Text = ({ marks = [], text }) => {
-    let output = text;
-
-    marks.forEach(({ type, attrs }) => output = (
-        <Markup type={type} attrs={attrs}>{output}</Markup>
-    ));
-
-    return output;
-}
-
-export const Utility = ({ content = [], type }) => {
-    const Tag = makeTag(type);
-
-    return Tag ? (<Tag><Bard data={content} /></Tag>) : null;
-};
-
-export const Set = ({ attrs, sets }) => {
-    const { values } = attrs; 
-    const Component = sets[values.type];
-    return <Component {...values} />;
-};
-
-export const Heading = ({ attrs, content = [] }) => {
-    const Tag = "h" + attrs.level;
-
-    return (<Tag><Bard data={content} /></Tag>);
-};
-
-export const HorizontalRule = () => (<hr />);
-
-export const HardBreak = () => (<br />);
 
 export default Bard;
