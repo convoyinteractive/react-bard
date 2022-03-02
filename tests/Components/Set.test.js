@@ -1,7 +1,7 @@
 import React from "react";
 import TestRenderer from "react-test-renderer";
 import { Set } from "../../src";
-import MySet from "./stubs/MySet";
+import MySet from "../stubs/MySet";
 
 describe("Set", () => {
   test("it renders the set", () => {

@@ -8,7 +8,7 @@ import Bard, {
     Text,
     Utility,
 } from "../src/index";
-import MySet from "./Components/stubs/MySet";
+import MySet from "./stubs/MySet";
 
 describe("Bard", () => {
     test("it returns an array of components", () => {
