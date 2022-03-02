@@ -8,6 +8,7 @@ import Bard, {
     Text,
     Utility,
 } from "../src/index";
+import MyParagraph from "./stubs/MyParagraph";
 import MySet from "./stubs/MySet";
 
 describe("Bard", () => {
@@ -60,6 +61,18 @@ describe("Bard", () => {
             Heading,
             Text,
         ]);
+    });
+
+    test("it allows to overwrite components", () => {
+        const data = [{ type: "paragraph" }];
+
+        const overrides = { "paragraph": MyParagraph };
+
+        const results = TestRenderer.create(
+            <Bard data={data} overrides={overrides} />
+        ).toTree().rendered;
+
+        expect(results.type).toBe(MyParagraph);
     });
     
 });
