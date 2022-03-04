@@ -35,6 +35,7 @@ export const Tag = ({type, children}:HasType & HasChildren) => {
         ordered_list: 'ol',
         paragraph: 'p',
         link: 'a',
+        image: 'img',
         superscript: 'sup',
         subscript: 'sub',
         code: 'code',
