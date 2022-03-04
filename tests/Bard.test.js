@@ -63,13 +63,13 @@ describe("Bard", () => {
         ]);
     });
 
-    test("it allows to overwrite components", () => {
+    test("it allows extensions and to overwrite components", () => {
         const data = [{ type: "paragraph" }];
 
         const overrides = { "paragraph": MyParagraph };
 
         const results = TestRenderer.create(
-            <Bard data={data} overrides={overrides} />
+            <Bard data={data} extend={overrides} />
         ).toTree().rendered;
 
         expect(results.type).toBe(MyParagraph);
