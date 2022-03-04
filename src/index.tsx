@@ -4,6 +4,12 @@ export interface HasAttributes {
     attrs?: Object;
 }
 
+export interface AllowsExtends {
+    extend?: {
+        [key: string]: Function;
+    };
+}
+
 export interface HasChildren {
     children: React.ReactNode;
 }
@@ -59,10 +65,10 @@ export const HardBreak = () => {
     return (<br />)
 };
 
-export const Heading = ({ attrs, content = [], sets }: HasContent & HasSets & HeadingAttributes) => {
+export const Heading = ({ attrs, content = [], sets, extend }: HasContent & HasSets & AllowsExtends & HeadingAttributes) => {
     const Tag = `h${attrs.level}` as keyof JSX.IntrinsicElements;
 
-    return (<Tag><Bard data={content} sets={sets} /></Tag>);
+    return (<Tag><Bard data={content} sets={sets} extend={extend} /></Tag>);
 };
 
 export const HorizontalRule = () => {
@@ -73,7 +79,7 @@ export const Markup = ({ type, attrs, children }: HasType & HasAttributes & HasC
     return (<Tag type={type} {...attrs} >{children}</Tag>) ;
 }
 
-export const Set = ({ attrs, sets }:SetAttributes & HasSets) => {
+export const Set = ({ attrs, sets }:SetAttributes & HasSets & AllowsExtends) => {
     const { values } = attrs; 
     const Component = sets[values.type];
     return (<Component {...values} />);
@@ -89,11 +95,11 @@ export const Text = ({ marks = [], text }: {marks: Array<HasType & HasAttributes
     return output;
 }
 
-export const Utility = ({ content = [], type, sets }:HasType & HasContent & HasSets) => {
-    return (<Tag type={type}><Bard data={content} sets={sets} /></Tag>);
+export const Utility = ({ content = [], type, sets, extend }:HasType & HasContent & HasSets & AllowsExtends) => {
+    return (<Tag type={type}><Bard data={content} sets={sets} extend={extend} /></Tag>);
 };
 
-const Bard = ({ data, sets }: { data: Array<HasType> } & HasSets ) => {
+const Bard = ({ data, sets, extend = {} }: { data: Array<HasType> } & HasSets & AllowsExtends) => {
     const components = {
         heading: Heading,
         horizontal_rule: HorizontalRule,
@@ -103,7 +109,7 @@ const Bard = ({ data, sets }: { data: Array<HasType> } & HasSets ) => {
     }
     
     return data.map((item) => {
-        const Component = components[item.type] || Utility;
+        const Component = extend[item.type] || components[item.type] || Utility;
         const key = Math.random().toString(36).substr(2, 8);
 
         return (<Component {...item} sets={ sets } key={key} />);
