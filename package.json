@@ -1,5 +1,16 @@
 {
+  "name": "@convoyinteractive/react-bard",
+  "version": "0.0.0",
   "main": "dist/index.js",
+  "keywords": [
+    "bard",
+    "prosemirror",
+    "react",
+    "statamic",
+    "wysiwyg"
+  ],
+  "homepage": "https://github.com/convoyinteractive/react-bard#readme",
+  "license" : "MIT",
   "files": [
     "dist"
   ],
