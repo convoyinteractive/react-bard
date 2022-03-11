@@ -66,7 +66,7 @@ describe("Bard", () => {
     test("it allows extensions and to overwrite components", () => {
         const data = [{ type: "paragraph" }];
 
-        const overrides = { "paragraph": MyParagraph };
+        const overrides = { paragraph: MyParagraph };
 
         const results = TestRenderer.create(
             <Bard data={data} extend={overrides} />
@@ -74,5 +74,4 @@ describe("Bard", () => {
 
         expect(results.type).toBe(MyParagraph);
     });
-    
 });
