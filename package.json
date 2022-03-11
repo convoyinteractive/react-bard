@@ -1,6 +1,6 @@
 {
   "name": "@convoyinteractive/react-bard",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "main": "dist/index.js",
   "keywords": [
     "bard",
@@ -10,7 +10,7 @@
     "wysiwyg"
   ],
   "homepage": "https://github.com/convoyinteractive/react-bard#readme",
-  "license" : "MIT",
+  "license": "MIT",
   "files": [
     "dist"
   ],
