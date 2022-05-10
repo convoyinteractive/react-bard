@@ -28,23 +28,4 @@ describe("Markup", () => {
             expect(e).toBeInstanceOf(Error);
         }
     });
-
-    test("it renders a tag component of type img", () => {
-        const result = TestRenderer.create(
-            <Markup
-                attrs={{
-                    alt: "Alternative Text",
-                    src: "http://example.test/image.jpg",
-                }}
-                type="image"
-            />
-        );
-
-        expect(result.toTree().rendered.type).toBe(Tag);
-        expect(result.toTree().rendered.rendered.type).toBe("img");
-        expect(result.toTree().rendered.props.alt).toBe("Alternative Text");
-        expect(result.toTree().rendered.props.src).toBe(
-            "http://example.test/image.jpg"
-        );
-    });
 });
