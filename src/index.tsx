@@ -28,6 +28,8 @@ export interface HasType {
     type: string;
 }
 
+type ImageAttributes = { attrs: { src: string; alt?: string; } };
+
 type HeadingAttributes = { attrs: { level: 1 | 2 | 3 | 4 | 5 | 6 } };
 
 type SetAttributes = { attrs: { values: HasType } };
@@ -41,7 +43,6 @@ export const Tag = ({ type, children }: HasType & HasChildren) => {
         ordered_list: "ol",
         paragraph: "p",
         link: "a",
-        image: "img",
         superscript: "sup",
         subscript: "sub",
         code: "code",
@@ -139,6 +140,11 @@ export const Utility = ({
     );
 };
 
+
+export const Image = ({ attrs }: ImageAttributes) => {
+    return <img {...attrs} />
+}
+
 const Bard = ({
     data,
     sets,
@@ -146,6 +152,7 @@ const Bard = ({
 }: { data: Array<HasType> } & HasSets & AllowsExtends) => {
     const components = {
         heading: Heading,
+        image: Image,
         horizontal_rule: HorizontalRule,
         hard_break: HardBreak,
         text: Text,
