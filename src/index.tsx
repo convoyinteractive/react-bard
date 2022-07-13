@@ -34,7 +34,7 @@ type HeadingAttributes = { attrs: { level: 1 | 2 | 3 | 4 | 5 | 6 } };
 
 type SetAttributes = { attrs: { values: HasType } };
 
-export const Tag = ({ type, children }: HasType & HasChildren) => {
+export const Tag = ({ type, ...props }: HasType & HasChildren) => {
     const availableTags = {
         blockquote: "blockquote",
         bullet_list: "ul",
@@ -59,7 +59,7 @@ export const Tag = ({ type, children }: HasType & HasChildren) => {
         throw new Error(`react-bard: Type "${type}" not supported`);
     }
     const HtmlTag = availableTags[type] as keyof JSX.IntrinsicElements;
-    return <HtmlTag>{children}</HtmlTag>;
+    return <HtmlTag {...props}/>;
 };
 
 export const HardBreak = () => {
