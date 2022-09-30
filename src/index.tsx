@@ -159,12 +159,16 @@ const Bard = ({
         set: Set,
     };
 
-    return data.map((item) => {
-        const Component = extend[item.type] || components[item.type] || Utility;
-        const key = Math.random().toString(36).substr(2, 8);
+    return (
+        <React.Fragment>
+            {data.map((item) => {
+                const Component = extend[item.type] || components[item.type] || Utility;
+                const key = Math.random().toString(36).substr(2, 8);
 
-        return <Component {...item} sets={sets} key={key} />;
-    });
+                return <Component {...item} sets={sets} key={key} />;
+            })}
+        </React.Fragment>
+    );
 };
 
 export default Bard;
