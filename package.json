@@ -1,7 +1,7 @@
 {
   "name": "@convoyinteractive/react-bard",
   "version": "0.1.2",
-  "main": "dist/index.js",
+  "main": "dist/index.mjs",
   "keywords": [
     "bard",
     "prosemirror",
