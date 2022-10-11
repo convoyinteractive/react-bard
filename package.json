@@ -1,6 +1,6 @@
 {
   "name": "@convoyinteractive/react-bard",
-  "version": "0.1.2",
+  "version": "1.0.0",
   "main": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "keywords": [
